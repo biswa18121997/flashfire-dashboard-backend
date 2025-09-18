@@ -304,7 +304,6 @@ if (NODE_ENV === "development") {
 // Routes
 app.use("/", Routes);
 
-
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({ 
@@ -370,5 +369,4 @@ app.listen(PORT, () => {
   console.log(`📊 Health check available at http://localhost:${PORT}/health`);
   console.log(`🌐 API available at http://localhost:${PORT}`);
 });
-
 
