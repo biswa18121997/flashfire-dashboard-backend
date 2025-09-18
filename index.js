@@ -304,6 +304,7 @@ if (NODE_ENV === "development") {
 // Routes
 app.use("/", Routes);
 
+
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({ 
