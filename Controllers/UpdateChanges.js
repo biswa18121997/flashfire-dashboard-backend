@@ -20,7 +20,17 @@ export default async function UpdateChanges(req, res) {
         },
         { new: true, upsert: false }
       );
-    }
+      const discordMessage =
+  `📌 Job Update:
+  Client: ${userDetails.name}
+   Company: ${currentStatus.companyName}
+   Job Title: ${currentStatus.jobTitle}
+   Status: ${req.body?.status}
+   Previous: ${currentStatus.currentStatus}`; 
+      if(req.body.status !== 'deleted')await DiscordConnect(process.env.DISCORD_APPLICATION_TRACKING_CHANNEL,discordMessage);
+      
+  }
+    
 
   else if (action === "edit") {
   const userEmail = userDetails?.email;
@@ -137,4 +147,5 @@ export default async function UpdateChanges(req, res) {
     return res.status(500).json({ message: "Server error", error: String(error) });
   }
 }
+
 
