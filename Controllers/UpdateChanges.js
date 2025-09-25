@@ -20,14 +20,22 @@ export default async function UpdateChanges(req, res) {
         },
         { new: true, upsert: false }
       );
-      const discordMessage =
-  `📌 Job Update:
-  Client: ${userDetails.name}
-   Company: ${current?.companyName}
-   Job Title: ${current?.jobTitle}
-   Status: ${statusToSet}
-   Previous: ${current?.currentStatus}`; 
-      if(baseStatus !== 'deleted') await DiscordConnect(process.env.DISCORD_APPLICATION_TRACKING_CHANNEL,discordMessage);
+      // Only send Discord notification when moving TO an important status
+      const importantStatuses = ['saved', 'applied', 'interviewing', 'offer', 'rejected', 'deleted'];
+      const isImportantChange = importantStatuses.some(status => 
+        statusToSet.toLowerCase().includes(status)
+      );
+      
+      if (isImportantChange) {
+        const discordMessage =
+    `📌 Job Update:
+    Client: ${userDetails.name}
+     Company: ${current?.companyName}
+     Job Title: ${current?.jobTitle}
+     Status: ${statusToSet}
+     Previous: ${current?.currentStatus}`; 
+        await DiscordConnect(process.env.DISCORD_APPLICATION_TRACKING_CHANNEL,discordMessage);
+      }
       
   }
     
