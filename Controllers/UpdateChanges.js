@@ -140,8 +140,20 @@ export default async function UpdateChanges(req, res) {
       await JobModel.findOneAndDelete({ jobID, userID: userEmail });
     }
 
-    const updatedJobs = await JobModel.find({ userID: userEmail }).sort({ createdAt: -1 });
-    return res.status(200).json({ message: "Jobs updated successfully", updatedJobs });
+    // Filter out any timeline entries like "saved by ..." from the response only
+    const updatedJobs = await JobModel.find({ userID: userEmail })
+      .sort({ createdAt: -1 })
+      .lean();
+    const sanitizedJobs = updatedJobs.map((job) => {
+      const copy = { ...job };
+      if (Array.isArray(copy.timeline)) {
+        copy.timeline = copy.timeline.filter(
+          (t) => !(typeof t === "string" && t.toLowerCase().startsWith("saved by"))
+        );
+      }
+      return copy;
+    });
+    return res.status(200).json({ message: "Jobs updated successfully", updatedJobs: sanitizedJobs });
   } catch (error) {
     console.error("UpdateChanges error:", error);
     return res.status(500).json({ message: "Server error", error: String(error) });
