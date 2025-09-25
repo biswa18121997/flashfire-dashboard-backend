@@ -23,11 +23,11 @@ export default async function UpdateChanges(req, res) {
       const discordMessage =
   `📌 Job Update:
   Client: ${userDetails.name}
-   Company: ${currentStatus.companyName}
-   Job Title: ${currentStatus.jobTitle}
-   Status: ${req.body?.status}
-   Previous: ${currentStatus.currentStatus}`; 
-      if(req.body.status !== 'deleted')await DiscordConnect(process.env.DISCORD_APPLICATION_TRACKING_CHANNEL,discordMessage);
+   Company: ${current?.companyName}
+   Job Title: ${current?.jobTitle}
+   Status: ${statusToSet}
+   Previous: ${current?.currentStatus}`; 
+      if(baseStatus !== 'deleted') await DiscordConnect(process.env.DISCORD_APPLICATION_TRACKING_CHANNEL,discordMessage);
       
   }
     
@@ -140,20 +140,8 @@ export default async function UpdateChanges(req, res) {
       await JobModel.findOneAndDelete({ jobID, userID: userEmail });
     }
 
-    // Filter out any timeline entries like "saved by ..." from the response only
-    const updatedJobs = await JobModel.find({ userID: userEmail })
-      .sort({ createdAt: -1 })
-      .lean();
-    const sanitizedJobs = updatedJobs.map((job) => {
-      const copy = { ...job };
-      if (Array.isArray(copy.timeline)) {
-        copy.timeline = copy.timeline.filter(
-          (t) => !(typeof t === "string" && t.toLowerCase().startsWith("saved by"))
-        );
-      }
-      return copy;
-    });
-    return res.status(200).json({ message: "Jobs updated successfully", updatedJobs: sanitizedJobs });
+    const updatedJobs = await JobModel.find({ userID: userEmail }).sort({ createdAt: -1 });
+    return res.status(200).json({ message: "Jobs updated successfully", updatedJobs });
   } catch (error) {
     console.error("UpdateChanges error:", error);
     return res.status(500).json({ message: "Server error", error: String(error) });
