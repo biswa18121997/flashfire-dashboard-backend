@@ -75,7 +75,7 @@ app.post("/check-profile", CheckProfile);
 app.post("/setprofile", LocalTokenValidator, ProfileCheck, Add_Update_Profile);
 app.post("/upload-profile-file", upload.single('file'), LocalTokenValidator, uploadProfileFile);
 
-
+app.use('/api', R2EndPoint); // R2 EndPoint for file uploads
 // Job routes
 app.post("/addjob", LocalTokenValidator, CheckForDuplicateJobs, AddJob);
 app.get("/getalljobs", LocalTokenValidator, GetAllJobs);

@@ -27,7 +27,7 @@ export default async function UpdateChanges(req, res) {
    Job Title: ${current?.jobTitle}
    Status: ${statusToSet}
    Previous: ${current?.currentStatus}`; 
-      if(baseStatus !== 'deleted') await DiscordConnect(process.env.DISCORD_APPLICATION_TRACKING_CHANNEL,discordMessage);
+     // if(baseStatus !== 'deleted') await DiscordConnect(process.env.DISCORD_APPLICATION_TRACKING_CHANNEL,discordMessage);
       
   }
     
@@ -129,7 +129,7 @@ export default async function UpdateChanges(req, res) {
         `  Job Title: ${updated.jobTitle}\n` +
         `  Status: ${nextStatus}\n` +
         `  Previous: ${existing.currentStatus}`;
-      await DiscordConnect(process.env.DISCORD_APPLICATION_TRACKING_CHANNEL, discordMessage);
+    //  await DiscordConnect(process.env.DISCORD_APPLICATION_TRACKING_CHANNEL, discordMessage);
     }
   } catch (e) {
     console.log('Discord notify (edit) failed:', e);

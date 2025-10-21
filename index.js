@@ -223,6 +223,8 @@ console.log(`🌐 Server will run on port: ${PORT}`);
 //   },
 // }));
 
+
+
 // CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
@@ -239,7 +241,17 @@ const corsOptions = {
           // "https://utm-track-frontend.vercel.app",
           ...(process.env.ALLOWED_ORIGINS?.split(",") || [])
         ]
+<<<<<<< HEAD
         : ["http://localhost:3000"];
+=======
+        : [ "chrome-extension://hfacjbfgibpndmgickneebipgemofpha",
+            "http://localhost:3000", 
+            "http://localhost:5173", 
+            "http://localhost:5175", 
+            "http://localhost:5176",
+            "chrome-extension://ohijddggajgflkcelimdpgdghbpphial"
+          ];
+>>>>>>> e9c5cd5 (cloudflare && dashboard guide)
     
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
@@ -355,6 +367,8 @@ app.use((err, req, res, next) => {
     ...(NODE_ENV === "development" && { stack: err.stack })
   });
 });
+
+
 
 // Connect to database
 connectDB().then(() => {

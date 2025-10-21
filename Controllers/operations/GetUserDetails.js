@@ -7,7 +7,7 @@ dotenv.config();
 
 export default async function GetUserDetails(req, res) {
      const { email, existanceOfUser, operationsUserId } = req.body;
-     console.log(req.body);
+     //console.log(req.body);
 
      try {
           // Verify operations user has permission to access this client
@@ -37,7 +37,7 @@ export default async function GetUserDetails(req, res) {
                     id: existanceOfUser._id,
                     role: 'User' // Client users have 'User' role
                },
-               process.env.JWT_SECRET_KEY,
+               process.env.JWT_SECRET,
                { expiresIn: '24h' }
           );
           console.log("token: ", token);
