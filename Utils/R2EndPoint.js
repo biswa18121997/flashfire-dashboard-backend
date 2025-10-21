@@ -1,43 +1,3 @@
-// import express from "express";
-// import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-// import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-// import dotenv from "dotenv";
-
-// dotenv.config();
-// const router = express.Router();
-
-// const r2 = new S3Client({
-//   region: "auto",
-//   endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${process.env.R2_BUCKET_NAME}`,
-//   credentials: {
-//     accessKeyId: process.env.R2_ACCESS_KEY_ID,
-//     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-//   },
-// });
-
-// router.get("/presigned-url", async (req, res) => {
-//   try {
-//     const { fileName, fileType } = req.query;
-
-//     const key = `uploads/${Date.now()}_${fileName}`;
-//     const command = new PutObjectCommand({
-//       Bucket: process.env.R2_BUCKET_NAME,
-//       Key: key,
-//       ContentType: fileType,
-//     });
-
-//     const uploadUrl = await getSignedUrl(r2, command, { expiresIn: 300 }); // 5 mins
-//     const fileUrl = `https://${process.env.R2_PUBLIC_DOMAIN}/${key}`;
-
-//     console.log(uploadUrl, fileUrl);
-//     res.json({ uploadUrl, fileUrl });
-//   } catch (err) {
-//     console.log("Error generating presigned URL:", err);
-//     res.status(500).json({ error: "Failed to generate upload URL" });
-//   }
-// });
-
-// export default router;
 
 import express from "express";
 import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
@@ -60,6 +20,8 @@ const r2 = new S3Client({
 router.get("/presigned-url", async (req, res) => {
   try {
     const { fileName, fileType, clientName, fileKind } = req.query;
+    console.log('R2_ACCOUNT_ID:', process.env.R2_ACCOUNT_ID);
+console.log('R2_BUCKET_NAME:', process.env.R2_BUCKET_NAME);
 
     if (!clientName || !fileKind || !fileName || !fileType)
       return res.status(400).json({ error: "fileName, fileType, clientName and fileKind are required" });
