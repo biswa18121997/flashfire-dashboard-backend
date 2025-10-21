@@ -242,7 +242,7 @@ const corsOptions = {
           // "https://utm-track-frontend.vercel.app",
 =======
           "https://clients-tracking.vercel.app",
-          "https://flashfire-dashboard-assets.ea7feaa0807f23a74111f715fbf1c169.r2.cloudflarestorage.com"
+          "https://flashfire-dashboard-assets.ea7feaa0807f23a74111f715fbf1c169.r2.cloudflarestorage.com",
           "https://dashboardtracking.vercel.app",
           "https://utm-track-frontend.vercel.app",
 >>>>>>> d7b7e31 (avcfv)
@@ -252,7 +252,7 @@ const corsOptions = {
         : ["http://localhost:3000"];
 =======
         : [ "chrome-extension://hfacjbfgibpndmgickneebipgemofpha",
-            "https://flashfire-dashboard-assets.ea7feaa0807f23a74111f715fbf1c169.r2.cloudflarestorage.com"
+            "https://flashfire-dashboard-assets.ea7feaa0807f23a74111f715fbf1c169.r2.cloudflarestorage.com",
             "http://localhost:3000", 
             "http://localhost:5173", 
             "http://localhost:5175", 
