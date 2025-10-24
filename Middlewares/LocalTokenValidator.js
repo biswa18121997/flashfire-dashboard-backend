@@ -14,6 +14,7 @@ export default async function LocalTokenValidator(req, res, next) {
             const decoded = jwt.verify(token, process.env.JWT_SECRET || 'flashfire-secret-key-2024');
             userDetails = { email: decoded.email };
         } catch (err) {
+            console.log(err);
             return res.status(403).json({ message: "Invalid token" });
         }
     } else {
@@ -42,3 +43,4 @@ export default async function LocalTokenValidator(req, res, next) {
         return res.status(403).json({ message: "Invalid token or expired" });
     }
 }
+
