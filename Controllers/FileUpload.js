@@ -1,4 +1,4 @@
-import { uploadFile } from "../Utils/storageService.js";
+import { saveFileLocally, getFileUrl } from "../Utils/localFileStorage.js";
 import { ProfileModel } from "../Schema_Models/ProfileModel.js";
 
 export default async function FileUpload(req, res) {
@@ -19,49 +19,28 @@ export default async function FileUpload(req, res) {
       });
     }
 
-    // Get client information from profile
-    // const profile = await ProfileModel.findOne({ email });
-    // if (!profile) {
-    //   return res.status(404).json({ 
-    //     message: "Profile not found" 
-    //   });
-    // }
-
-    // Create client name from firstName and lastName
-    const clientName = `${profile.firstName}_${profile.lastName}`.replace(/[^a-zA-Z0-9._-]/g, '_');
-
     // Convert base64 to buffer
     const fileBuffer = Buffer.from(fileData.split(',')[1], 'base64');
     
-    // Determine file extension and content type from base64 data
-    const mimeMatch = fileData.match(/^data:([^;]+);base64,/);
-    const contentType = mimeMatch ? mimeMatch[1] : 'application/pdf';
-    const extension = contentType.includes('pdf') ? 'pdf' : 'doc';
-    
-    // Upload using unified storage service with client-based folder structure
-    const originalName = `${fileType}.${extension}`;
-    const uploadResult = await uploadFile(fileBuffer, {
-      folder: '', // Empty folder since base URL already includes /test
-      filename: originalName,
-      contentType: contentType,
-      clientName: clientName,
-      fileType: 'resumes', // Use 'resumes' for resume and cover letter files
-    });
+    // Save file locally
+    const originalName = `${fileType}.pdf`;
+    const uploadResult = await saveFileLocally(fileBuffer, originalName, fileType);
     
     if (!uploadResult.success) {
       return res.status(500).json({ 
-        message: "Failed to upload file",
+        message: "Failed to save file locally",
         error: uploadResult.error 
       });
     }
 
-    // Update profile with the new file URL
+    // Update profile with the new file path
     const updateField = fileType === 'resume' ? 'resumeUrl' : 'coverLetterUrl';
-    // const updated = await ProfileModel.findOneAndUpdate(
-    //   { email },
-    //   { $set: { [updateField]: uploadResult.url } },
-    //   { new: true }
-    // );
+    const fileUrl = getFileUrl(uploadResult.filePath);
+    const updated = await ProfileModel.findOneAndUpdate(
+      { email },
+      { $set: { [updateField]: fileUrl } },
+      { new: true }
+    );
 
     if (!updated) {
       return res.status(404).json({ 
@@ -71,8 +50,7 @@ export default async function FileUpload(req, res) {
 
     return res.json({
       message: `${fileType} uploaded successfully`,
-      url: uploadResult.url,
-      storage: uploadResult.storage,
+      url: fileUrl,
       profile: updated
     });
 

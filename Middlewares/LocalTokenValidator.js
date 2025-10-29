@@ -12,7 +12,7 @@ export default async function LocalTokenValidator(req, res, next) {
         // For GET requests, we'll get userDetails from the token itself
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET || 'flashfire-secret-key-2024');
-            userDetails = { email: decoded.email };
+            userDetails = { email: decoded?.email };
         } catch (err) {
             return res.status(403).json({ message: "Invalid token" });
         }
